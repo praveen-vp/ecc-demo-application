@@ -4,6 +4,9 @@ public class BaseModel {
 
     String publicKey;
 
+    public BaseModel() {
+    }
+
     public BaseModel(String publicKey) {
         this.publicKey = publicKey;
     }

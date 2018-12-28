@@ -1,7 +1,9 @@
 package com.msf.ecc.eccdemo;
 
-import com.msf.ecc.eccdemo.services.DoEncryption;
-import com.msf.ecc.eccdemo.services.GenerateKeyPair;
+import com.msf.ecc.eccdemo.services.EncryptionService;
+import com.msf.ecc.eccdemo.services.GenerateKeyPairService;
+import com.msf.ecc.eccdemo.services.imp.EncryptionServiceImp;
+import com.msf.ecc.eccdemo.services.imp.GenerateKeyPairServiceImp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -21,11 +23,11 @@ public class EccdemoApplication {
 
         try {
 
-            GenerateKeyPair generateKeyPair = new GenerateKeyPair();
-            KeyPair keyPairServer = generateKeyPair.generateKeyPair();
-            KeyPair keyPairClient = generateKeyPair.generateKeyPair();
+            GenerateKeyPairService generateKeyPairService = new GenerateKeyPairServiceImp();
+            KeyPair keyPairServer = generateKeyPairService.generateKeyPair();
+            KeyPair keyPairClient = generateKeyPairService.generateKeyPair();
 
-            System.out.println( "public key for client server : "+ keyPairClient.getPublic());
+            System.out.println("public key for client server : " + keyPairClient.getPublic());
 
             byte[] publicKeyBytes = keyPairClient.getPublic().getEncoded();
             String formatPublicKey = keyPairClient.getPublic().getFormat();
@@ -46,7 +48,7 @@ public class EccdemoApplication {
             /*
              * Generating the secret in server side
              */
-            DoEncryption eccKeyAgreement = new DoEncryption(keyPairServer.getPrivate(), keyPairClient.getPublic(), message);
+            EncryptionService eccKeyAgreement = new EncryptionServiceImp(keyPairServer.getPrivate(), keyPairClient.getPublic(), message);
             String enCryptedMsg = eccKeyAgreement.doEncryption();
 
             System.out.println("encrypted message --  " + enCryptedMsg);
@@ -54,7 +56,7 @@ public class EccdemoApplication {
             /*
              *Generating the secret key in client side
              */
-            eccKeyAgreement = new DoEncryption(keyPairClient.getPrivate(), keyPairServer.getPublic(), message);
+            eccKeyAgreement = new EncryptionServiceImp(keyPairClient.getPrivate(), keyPairServer.getPublic(), message);
             String decryptedMsg = eccKeyAgreement.doDecryption(enCryptedMsg);
             System.out.println("decryptedMsg -- " + decryptedMsg);
 

@@ -1,4 +1,8 @@
-package com.msf.ecc.eccdemo.services;
+package com.msf.ecc.eccdemo.services.imp;
+
+import com.msf.ecc.eccdemo.services.AESEncryptionService;
+import com.msf.ecc.eccdemo.services.EncryptionService;
+import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
@@ -6,18 +10,20 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-public class DoEncryption {
+// @Service
+public class EncryptionServiceImp implements EncryptionService {
 
-    private final PrivateKey privateKey;
-    private final PublicKey publicKey;
-    private final String message;
+    private PrivateKey privateKey;
+    private PublicKey publicKey;
+    private String message;
+    private AESEncryptionService encryptionService;
 
-
-    public DoEncryption(PrivateKey privateKey, PublicKey publicKey, String message) {
+    public EncryptionServiceImp(PrivateKey privateKey, PublicKey publicKey, String message) {
 
         this.privateKey = privateKey;
         this.publicKey = publicKey;
         this.message = message;
+        this.encryptionService = new AESEncryptionServiceImp();
     }
 
     public String doEncryption()
@@ -28,10 +34,8 @@ public class DoEncryption {
         System.out.println(
                 "Secret computed encryption : 0x" + secretString);
 
-        return AESEncryption.encrypt(message, secretString);
-
+        return encryptionService.encrypt(message, secretString);
     }
-
 
     public String doDecryption(String encryptedMsg) throws NoSuchAlgorithmException,
             InvalidKeyException {
@@ -40,8 +44,7 @@ public class DoEncryption {
         System.out.println(
                 "Secret computed decryption : 0x" + secretString);
 
-        return AESEncryption.decrypt(encryptedMsg, secretString);
-
+        return encryptionService.decrypt(encryptedMsg, secretString);
     }
 
     public String generateSecretKey() throws NoSuchAlgorithmException,
@@ -55,5 +58,4 @@ public class DoEncryption {
 
         return secretString;
     }
-
 }
