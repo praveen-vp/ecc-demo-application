@@ -27,10 +27,11 @@ public class MessageController {
     public MessageModel receiveClientMessage(@RequestBody MessageModel messageModel)
             throws InvalidKeyException, NoSuchAlgorithmException {
 
-        System.out.println(messageModel);
-
         PrivateKey serverPrivateKey = this.saveKeyPairService.getServerPrivateKey(messageModel.getPublicKey());
-        System.out.println(serverPrivateKey);
+
+        if(serverPrivateKey == null) {
+            return new MessageModel("500", "Invalid Request");
+        }
 
         PublicKey clientPublicKey = saveKeyPairService.getClientPublicKey(messageModel.getPublicKey());
         EncryptionService encryptionService = new EncryptionServiceImp(serverPrivateKey, clientPublicKey);

@@ -19,8 +19,8 @@ public class AESEncryptionServiceImp implements AESEncryptionService {
     private static final String aesEncryptionAlgorithm = "AES";
     private static final String messageDigest = "SHA-256";
 
-    private static SecretKeySpec secretKey;
-    private static byte[] key;
+    private SecretKeySpec secretKey;
+    private byte[] key;
 
     public String encrypt(String strToEncrypt, String secret) {
 
