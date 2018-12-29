@@ -2,7 +2,6 @@ package com.msf.ecc.eccdemo.services.imp;
 
 import com.msf.ecc.eccdemo.services.AESEncryptionService;
 import com.msf.ecc.eccdemo.services.EncryptionService;
-import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
@@ -10,7 +9,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-// @Service
 public class EncryptionServiceImp implements EncryptionService {
 
     private PrivateKey privateKey;

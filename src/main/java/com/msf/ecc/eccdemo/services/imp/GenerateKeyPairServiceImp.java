@@ -17,21 +17,6 @@ public class GenerateKeyPairServiceImp implements GenerateKeyPairService {
     public static final String provider = "SunEC";
     public static final String stdName = "secp192r1";
 
-    public static void main(String args[]) {
-
-        try {
-
-            GenerateKeyPairServiceImp gkpService = new GenerateKeyPairServiceImp();
-            KeyPair keyPair = gkpService.generateKeyPair();
-
-            System.out.println("private Key --- " + keyPair.getPrivate().toString());
-            System.out.println("public Key --- " + keyPair.getPublic().toString());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public KeyPair generateKeyPair()
             throws NoSuchAlgorithmException,
             NoSuchProviderException,

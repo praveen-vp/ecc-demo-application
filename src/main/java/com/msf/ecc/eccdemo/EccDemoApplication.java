@@ -15,9 +15,9 @@ import java.security.PublicKey;
 @SpringBootApplication
 public class EccDemoApplication {
 
-    private static final String message = "Secret message hide this";
-    private static final String SAY_HELLO_URL = "http://localhost:8080/sayHello";
-    private static final String KEY_EXCHANGE_URL = "http://localhost:8080/initiateKeyExchange";
+    public static final String message = "Secret message hide this";
+    public static final String SAY_HELLO_URL = "http://localhost:8080/sayHello";
+    public static final String KEY_EXCHANGE_URL = "http://localhost:8080/initiateKeyExchange";
 
     public static void main(String[] args) {
 
