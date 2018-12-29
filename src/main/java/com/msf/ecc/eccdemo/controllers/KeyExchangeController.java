@@ -2,7 +2,7 @@ package com.msf.ecc.eccdemo.controllers;
 
 
 import com.msf.ecc.eccdemo.models.BaseModel;
-import com.msf.ecc.eccdemo.models.KeyPairObj;
+import com.msf.ecc.eccdemo.models.KeyPairModel;
 import com.msf.ecc.eccdemo.services.GenerateKeyPairService;
 import com.msf.ecc.eccdemo.services.imp.GenerateKeyPairServiceImp;
 import com.msf.ecc.eccdemo.services.imp.SaveKeyPairServiceImp;
@@ -28,23 +28,30 @@ public class KeyExchangeController {
     @RequestMapping(method = RequestMethod.POST, value = "/initiateKeyExchange")
     public BaseModel intiateKeyMessage(@RequestBody BaseModel baseModel) throws Exception {
 
-        String publicKey = baseModel.getPublicKey();
-        System.out.println(" reading the public key from client --- " + publicKey);
+        String clientPublicKeyString = baseModel.getPublicKey();
+//        System.out.println(" reading the public key from client --- " + clientPublicKeyString);
 
-        // Generating the keypair for the server.
-        PublicKey clientPublicKey = generateKeyPairService.generatePublicKeyFromString(publicKey);
+        // regenerating the client side public key.
+        PublicKey clientPublicKey = generateKeyPairService.generatePublicKeyFromString(clientPublicKeyString);
 
         // generate server side keypair
-        KeyPair keyPair = generateKeyPairService.generateKeyPair();
+        KeyPair serverKeyPair = generateKeyPairService.generateKeyPair();
 
-        System.out.println("fetching all key pairs --- " + saveKeyPairService.findAll() + " --- list ends -- ");
+//        System.out.println(saveKeyPairService.getClientPublicKey(clientPublicKeyString));
+//        System.out.println(saveKeyPairService.getServerPublicKey(clientPublicKeyString));
 
-        // TODO save the pair using @keypairObj
-        KeyPairObj keyPairObj = new KeyPairObj(clientPublicKey, keyPair);
-        saveKeyPairService.saveKeyPair(baseModel.getPublicKey(), keyPairObj);
+        KeyPairModel keyPairModel = new KeyPairModel(clientPublicKey, serverKeyPair);
 
-        // return the server public key
-        return generateKeyPairService.getPublicKeyString(keyPair);
+        if (!saveKeyPairService.findAll().containsKey(clientPublicKeyString))
+            saveKeyPairService.saveKeyPair(baseModel.getPublicKey(), keyPairModel);
+
+//        System.out.println("fetching all key pairs --- \n" + saveKeyPairService.findAll() + " \n --- list ends -- ");
+
+        BaseModel serverPublicKeyStringModel = generateKeyPairService.getPublicKeyString(serverKeyPair);
+        System.out.println("server public key String --- " + serverPublicKeyStringModel);
+
+        // return the server publicKeyString
+        return serverPublicKeyStringModel;
 
     }
 
@@ -54,7 +61,7 @@ public class KeyExchangeController {
         GenerateKeyPairService generateKeyPairService = new GenerateKeyPairServiceImp();
         KeyPair keyPair = generateKeyPairService.generateKeyPair();
 
-        System.out.println(saveKeyPairService.findAll());
+        System.out.println("reading map details --- " + saveKeyPairService.findAll());
 
         return generateKeyPairService.getPublicKeyString(keyPair);
     }

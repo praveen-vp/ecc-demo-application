@@ -1,6 +1,6 @@
 package com.msf.ecc.eccdemo.services;
 
-import com.msf.ecc.eccdemo.models.KeyPairObj;
+import com.msf.ecc.eccdemo.models.KeyPairModel;
 
 import java.security.KeyPair;
 import java.security.PrivateKey;
@@ -8,7 +8,7 @@ import java.security.PublicKey;
 
 public interface SaveKeyPairService {
 
-    void saveKeyPair(String clientId, KeyPairObj keyPairObj);
+    void saveKeyPair(String clientId, KeyPairModel keyPairModel);
 
     void delete(String clientId);
 

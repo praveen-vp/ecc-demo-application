@@ -15,18 +15,16 @@ public class EncryptionServiceImp implements EncryptionService {
 
     private PrivateKey privateKey;
     private PublicKey publicKey;
-    private String message;
     private AESEncryptionService encryptionService;
 
-    public EncryptionServiceImp(PrivateKey privateKey, PublicKey publicKey, String message) {
+    public EncryptionServiceImp(PrivateKey senderPrivateKey, PublicKey receiverPublicKey) {
 
-        this.privateKey = privateKey;
-        this.publicKey = publicKey;
-        this.message = message;
+        this.privateKey = senderPrivateKey;
+        this.publicKey = receiverPublicKey;
         this.encryptionService = new AESEncryptionServiceImp();
     }
 
-    public String doEncryption()
+    public String doEncryption(String message)
             throws NoSuchAlgorithmException,
             InvalidKeyException {
 

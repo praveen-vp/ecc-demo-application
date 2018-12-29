@@ -49,7 +49,7 @@ public class AESEncryptionServiceImp implements AESEncryptionService {
             return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
 
         } catch (Exception e) {
-            System.out.println("Error while decrypting: " + e.toString());
+            e.printStackTrace();
             throw new RuntimeException("ERROR while Encrypting");
         }
     }

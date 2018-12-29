@@ -49,23 +49,39 @@ public class GenerateKeyPairServiceImp implements GenerateKeyPairService {
 
         PublicKey publicKey = keyPair.getPublic();
         byte[] publicKeyBytes = publicKey.getEncoded();
+
+        /*
+         String publicKeyFormat = publicKey.getFormat();
+
+        System.out.println("publicKeyFormat --- " + publicKeyFormat);
+        System.out.println("public key --- " + publicKey);
+        System.out.println("Public Key : " +
+                Base64.getEncoder().encodeToString(publicKeyBytes));
+       */
+        return new BaseModel(Base64.getEncoder().encodeToString(publicKeyBytes));
+    }
+
+
+    public BaseModel getPublicKeyString(PublicKey publicKey) {
+
+        /*
         String publicKeyFormat = publicKey.getFormat();
 
         System.out.println("publicKeyFormat --- " + publicKeyFormat);
         System.out.println("public key --- " + publicKey);
         System.out.println("Public Key : " +
                 Base64.getEncoder().encodeToString(publicKeyBytes));
-
-        return new BaseModel(Base64.getEncoder().encodeToString(publicKeyBytes));
+       */
+        return new BaseModel(Base64.getEncoder().encodeToString(publicKey.getEncoded()));
     }
 
-    public PublicKey generatePublicKeyFromString(String publicKeyString) throws Exception {
+    public PublicKey generatePublicKeyFromString(String publicKeyStringEncoded) throws Exception {
 
-        EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyString));
+        EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyStringEncoded));
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
-        System.out.println("public key generated from bytes : " + publicKey.toString());
+        // System.out.println("public key generated from bytes : " + publicKey.toString());
 
         return publicKey;
     }

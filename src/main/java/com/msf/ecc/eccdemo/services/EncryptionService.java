@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 
 public interface EncryptionService {
 
-    String doEncryption() throws NoSuchAlgorithmException,
+    String doEncryption(String message) throws NoSuchAlgorithmException,
             InvalidKeyException;
 
     String doDecryption(String encryptedMsg) throws NoSuchAlgorithmException,

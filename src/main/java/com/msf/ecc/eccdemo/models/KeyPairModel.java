@@ -3,15 +3,15 @@ package com.msf.ecc.eccdemo.models;
 import java.security.KeyPair;
 import java.security.PublicKey;
 
-public class KeyPairObj {
+public class KeyPairModel {
 
     PublicKey clientPublicKey;
     KeyPair serverKeyPair;
 
-    public KeyPairObj() {
+    public KeyPairModel() {
     }
 
-    public KeyPairObj(PublicKey clientPublicKey, KeyPair serverKeyPair) {
+    public KeyPairModel(PublicKey clientPublicKey, KeyPair serverKeyPair) {
         this.clientPublicKey = clientPublicKey;
         this.serverKeyPair = serverKeyPair;
     }
@@ -34,9 +34,12 @@ public class KeyPairObj {
 
     @Override
     public String toString() {
-        return "KeyPairObj{" +
-                "clientPublicKey=" + clientPublicKey +
-                ", serverKeyPair=" + serverKeyPair +
-                '}';
+        return "\nKeyPairModel \n" +
+                "\t{" +
+                "\n\t clientPublicKey=" + clientPublicKey +
+                ",\n\t serverKeyPairPublic=" + serverKeyPair.getPublic() +
+                ",\n\t serverKeyPairPrivate=" + serverKeyPair.getPrivate() +
+                "\n\t" +
+                '}' +"\n";
     }
 }

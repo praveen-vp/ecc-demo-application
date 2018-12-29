@@ -13,5 +13,7 @@ public interface GenerateKeyPairService {
 
     BaseModel getPublicKeyString(KeyPair keyPair);
 
+    BaseModel getPublicKeyString(PublicKey publicKey);
+
     PublicKey generatePublicKeyFromString(String publicKeyString) throws Exception;
 }

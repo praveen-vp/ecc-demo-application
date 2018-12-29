@@ -1,8 +1,10 @@
 package com.msf.ecc.eccdemo.models;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class BaseModel {
 
-    String publicKey;
+    protected String publicKey;
 
     public BaseModel() {
     }
@@ -21,8 +23,11 @@ public class BaseModel {
 
     @Override
     public String toString() {
-        return "BaseModel{" +
-                "publicKey='" + publicKey + '\'' +
-                '}';
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
