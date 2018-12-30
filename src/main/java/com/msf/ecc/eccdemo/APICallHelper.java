@@ -3,7 +3,7 @@ package com.msf.ecc.eccdemo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.msf.ecc.eccdemo.models.BaseModel;
 import com.msf.ecc.eccdemo.services.GenerateKeyPairService;
-import com.msf.ecc.eccdemo.services.imp.GenerateKeyPairServiceImp;
+import com.msf.ecc.eccdemo.services.imp.GenerateECKeyPairServiceImp;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -29,7 +29,7 @@ public class APICallHelper {
         String response = readResponse(httpURLConnection);
         httpURLConnection.disconnect();
 
-        GenerateKeyPairService generateKeyPairService = new GenerateKeyPairServiceImp();
+        GenerateKeyPairService generateKeyPairService = new GenerateECKeyPairServiceImp();
         System.out.println("public key from server --- "
                 + generateKeyPairService.generatePublicKeyFromString
                 (new ObjectMapper().readValue(response, BaseModel.class).getPublicKey()));

@@ -3,9 +3,11 @@ package com.msf.ecc.eccdemo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.msf.ecc.eccdemo.models.BaseModel;
 import com.msf.ecc.eccdemo.models.MessageModel;
-import com.msf.ecc.eccdemo.services.EncryptionService;
-import com.msf.ecc.eccdemo.services.imp.EncryptionServiceImp;
-import com.msf.ecc.eccdemo.services.imp.GenerateKeyPairServiceImp;
+import com.msf.ecc.eccdemo.services.GenerateKeyPairService;
+import com.msf.ecc.eccdemo.services.PrivateKeyEncryptionService;
+import com.msf.ecc.eccdemo.services.imp.AESEncryptionServiceImp;
+import com.msf.ecc.eccdemo.services.imp.GenerateECKeyPairServiceImp;
+import com.msf.ecc.eccdemo.services.imp.KeyAgreementServiceImp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -31,14 +33,16 @@ public class EccDemoApplication {
             /*
              * STEP 1 keyPair generation
              */
+            System.out.println("<<<<---STEP 1--->>>>");
             // Generating keyPairs for the client.
-            GenerateKeyPairServiceImp generateKeyPairService = new GenerateKeyPairServiceImp();
+            GenerateKeyPairService generateKeyPairService = new GenerateECKeyPairServiceImp();
             KeyPair clientKeyPair = generateKeyPairService.generateKeyPair();
             System.out.println("generated client side keypair");
 
             /*
              * STEP 2 - Key Exchange
              */
+            System.out.println("<<<<---STEP 2--->>>>");
             // create public key String for client publicKey
             BaseModel clientPublicKeyStringModel = generateKeyPairService.getPublicKeyString(clientKeyPair.getPublic());
             System.out.println("generated client side publicKey String for key exchange : " + clientPublicKeyStringModel);
@@ -57,12 +61,16 @@ public class EccDemoApplication {
             /*
              * STEP 3
              */
+            System.out.println("<<<<---STEP 3--->>>>");
             // calculate the secret key using server public key and client private key
             // and encrypt the message
-            EncryptionService encryptionService = new EncryptionServiceImp(clientKeyPair.getPrivate(), serverPublicKey);
+            PrivateKeyEncryptionService encryptionService = new AESEncryptionServiceImp(
+                    new KeyAgreementServiceImp(clientKeyPair.getPrivate(),
+                            serverPublicKey).generateSecretKey()
+            );
 
             // encrypt the message
-            String encryptedMessage = encryptionService.doEncryption(message);
+            String encryptedMessage = encryptionService.encrypt(message);
             System.out.println(" message encrypted : " + encryptedMessage);
 
             // creating a message model using client publicKeyString and encrypted message
@@ -72,6 +80,7 @@ public class EccDemoApplication {
             /*
              * STEP 4
              */
+            System.out.println("<<<<---STEP 4--->>>>");
             // client send a encrypted message to the server using server's public key
             // server will decrypt it and send the encrypted response using client's public key
             MessageModel messageModelResponse = new ObjectMapper().readValue(
@@ -82,7 +91,10 @@ public class EccDemoApplication {
             // client decrypts the message
             System.out.println(messageModelResponse.getMessage());
             System.out.println("client decrypts server message : -- "
-                    + encryptionService.doDecryption(messageModelResponse.getMessage()));
+                    + encryptionService.decrypt(messageModelResponse.getMessage()));
+
+            // Testing Map Details
+            APICallHelper.makeTestServiceApiCall();
 
         } catch (Exception e) {
             e.printStackTrace();

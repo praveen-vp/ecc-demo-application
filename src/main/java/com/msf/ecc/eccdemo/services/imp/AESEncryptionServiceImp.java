@@ -1,6 +1,6 @@
 package com.msf.ecc.eccdemo.services.imp;
 
-import com.msf.ecc.eccdemo.services.AESEncryptionService;
+import com.msf.ecc.eccdemo.services.PrivateKeyEncryptionService;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Base64;
 
 @Service
-public class AESEncryptionServiceImp implements AESEncryptionService {
+public class AESEncryptionServiceImp implements PrivateKeyEncryptionService {
 
     private static final String characterEncoding = "UTF-8";
     private static final String cipherTransformation = "AES/ECB/PKCS5Padding";
@@ -20,13 +20,18 @@ public class AESEncryptionServiceImp implements AESEncryptionService {
     private static final String messageDigest = "SHA-256";
 
     private SecretKeySpec secretKey;
-    private byte[] key;
 
-    public String encrypt(String strToEncrypt, String secret) {
+    public AESEncryptionServiceImp() {
+    }
+
+    public AESEncryptionServiceImp(String secretKey) {
+        this.secretKey = setKey(secretKey);
+    }
+
+    public String encrypt(String strToEncrypt) {
 
         try {
 
-            setKey(secret);
             Cipher cipher = Cipher.getInstance(cipherTransformation);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
@@ -38,11 +43,10 @@ public class AESEncryptionServiceImp implements AESEncryptionService {
         }
     }
 
-    public String decrypt(String strToDecrypt, String secret) {
+    public String decrypt(String strToDecrypt) {
 
         try {
 
-            setKey(secret);
             Cipher cipher = Cipher.getInstance(cipherTransformation);
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
 
@@ -54,12 +58,13 @@ public class AESEncryptionServiceImp implements AESEncryptionService {
         }
     }
 
+    public SecretKeySpec setKey(String myKey) {
 
-    public void setKey(String myKey) {
+        SecretKeySpec secretKey;
 
         try {
 
-            key = myKey.getBytes("UTF-8");
+            byte[] key = myKey.getBytes("UTF-8");
             MessageDigest sha = MessageDigest.getInstance(messageDigest);
             key = sha.digest(key);
             key = Arrays.copyOf(key, 16);
@@ -74,5 +79,15 @@ public class AESEncryptionServiceImp implements AESEncryptionService {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+
+        return secretKey;
+    }
+
+    public SecretKeySpec getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(SecretKeySpec secretKey) {
+        this.secretKey = secretKey;
     }
 }

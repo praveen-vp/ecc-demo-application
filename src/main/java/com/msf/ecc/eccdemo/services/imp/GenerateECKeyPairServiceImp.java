@@ -11,7 +11,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 @Service
-public class GenerateKeyPairServiceImp implements GenerateKeyPairService {
+public class GenerateECKeyPairServiceImp implements GenerateKeyPairService {
 
     public static final String algorithm = "EC";
     public static final String provider = "SunEC";
@@ -25,38 +25,13 @@ public class GenerateKeyPairServiceImp implements GenerateKeyPairService {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(algorithm, provider);
         ECGenParameterSpec ecsp = new ECGenParameterSpec(stdName);
         kpg.initialize(ecsp);
-
         KeyPair kp = kpg.genKeyPair();
+
         return kp;
     }
 
-    public BaseModel getPublicKeyString(KeyPair keyPair) {
-
-        PublicKey publicKey = keyPair.getPublic();
-        byte[] publicKeyBytes = publicKey.getEncoded();
-
-        /*
-         String publicKeyFormat = publicKey.getFormat();
-
-        System.out.println("publicKeyFormat --- " + publicKeyFormat);
-        System.out.println("public key --- " + publicKey);
-        System.out.println("Public Key : " +
-                Base64.getEncoder().encodeToString(publicKeyBytes));
-       */
-        return new BaseModel(Base64.getEncoder().encodeToString(publicKeyBytes));
-    }
-
-
     public BaseModel getPublicKeyString(PublicKey publicKey) {
 
-        /*
-        String publicKeyFormat = publicKey.getFormat();
-
-        System.out.println("publicKeyFormat --- " + publicKeyFormat);
-        System.out.println("public key --- " + publicKey);
-        System.out.println("Public Key : " +
-                Base64.getEncoder().encodeToString(publicKeyBytes));
-       */
         return new BaseModel(Base64.getEncoder().encodeToString(publicKey.getEncoded()));
     }
 
@@ -65,8 +40,6 @@ public class GenerateKeyPairServiceImp implements GenerateKeyPairService {
         EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyStringEncoded));
         KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
         PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
-
-        // System.out.println("public key generated from bytes : " + publicKey.toString());
 
         return publicKey;
     }

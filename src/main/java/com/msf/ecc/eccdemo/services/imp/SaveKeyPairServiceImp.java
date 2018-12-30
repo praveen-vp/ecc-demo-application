@@ -10,7 +10,7 @@ import java.security.PublicKey;
 import java.util.HashMap;
 
 @Service
-public class SaveKeyPairServiceImp implements SaveKeyPairService {
+public class SaveKeyPairServiceImp implements SaveKeyPairService<HashMap> {
 
     protected HashMap<String, KeyPairModel> keyPairMap = new HashMap<>();
 

@@ -1,8 +1,9 @@
 package com.msf.ecc.eccdemo.controllers;
 
 import com.msf.ecc.eccdemo.models.MessageModel;
-import com.msf.ecc.eccdemo.services.EncryptionService;
-import com.msf.ecc.eccdemo.services.imp.EncryptionServiceImp;
+import com.msf.ecc.eccdemo.services.PrivateKeyEncryptionService;
+import com.msf.ecc.eccdemo.services.imp.AESEncryptionServiceImp;
+import com.msf.ecc.eccdemo.services.imp.KeyAgreementServiceImp;
 import com.msf.ecc.eccdemo.services.imp.SaveKeyPairServiceImp;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,22 +30,23 @@ public class MessageController {
 
         PrivateKey serverPrivateKey = this.saveKeyPairService.getServerPrivateKey(messageModel.getPublicKey());
 
-        if(serverPrivateKey == null) {
+        if (serverPrivateKey == null) {
             return new MessageModel("500", "Invalid Request");
         }
 
         PublicKey clientPublicKey = saveKeyPairService.getClientPublicKey(messageModel.getPublicKey());
-        EncryptionService encryptionService = new EncryptionServiceImp(serverPrivateKey, clientPublicKey);
+        PrivateKeyEncryptionService encryptionService = new AESEncryptionServiceImp(
+                new KeyAgreementServiceImp(serverPrivateKey, clientPublicKey).generateSecretKey()
+        );
 
-        String decryptedMsg = encryptionService.doDecryption(messageModel.getMessage());
+        String decryptedMsg = encryptionService.decrypt(messageModel.getMessage());
         System.out.println("server decrypts the message as --- " + decryptedMsg);
 
         // server sending a encrypted message back to client
-        String serverMessage = "decrypted your message successfully -- "  + decryptedMsg;
+        String serverMessage = "decrypted your message successfully -- " + decryptedMsg;
+        System.out.println(" serverMessage -- " + serverMessage);
 
-        System.out.println(" serverMessage -- "  + serverMessage);
-
-        serverMessage = encryptionService.doEncryption(serverMessage);
+        serverMessage = encryptionService.encrypt(serverMessage);
         System.out.println("server encrypted message -- " + serverMessage);
 
         return new MessageModel(messageModel.getPublicKey(), serverMessage);

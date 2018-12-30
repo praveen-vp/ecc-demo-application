@@ -11,8 +11,6 @@ public interface GenerateKeyPairService {
             NoSuchProviderException,
             InvalidAlgorithmParameterException;
 
-    BaseModel getPublicKeyString(KeyPair keyPair);
-
     BaseModel getPublicKeyString(PublicKey publicKey);
 
     PublicKey generatePublicKeyFromString(String publicKeyString) throws Exception;
